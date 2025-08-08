@@ -7,7 +7,8 @@ stages: [
     { duration: '5s', target: 25 },
     { duration: '5s', target: 35 },
     { duration: '5s', target: 45 },
-    { duration: '5s', target: 55 },
+    { duration: '5s', target: 50 },
+    { duration: '5s', target: 50 },
     { duration: '5s', target: 0 },   
 ],
     thresholds: {
