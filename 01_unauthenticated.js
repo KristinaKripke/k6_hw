@@ -2,10 +2,10 @@ import http from 'k6/http';
 import { check, sleep } from 'k6';
 
 export const options = {
-  vus: 1,
+  vus: 5,
   duration: '15s',
   userAgent: 'K6PerformanceTests/1.0',
-  iterations: 1,
+  iterations: 5,
 };
 
 export default function () {
@@ -59,12 +59,82 @@ check(loginRes, {'Login status is 200': (r) => r.status === 200});
     'Content-Type': 'application/json'
   };
 
+
+const reviewMessages = [
+    'Excellent quality and fast delivery!',
+    'Love this product, highly recommended.',
+    'Good value for money, will buy again.',
+    'Amazing taste and great packaging.',
+    'Perfect for my daily needs.',
+    'Outstanding customer service experience.',
+    'Fresh and delicious every time.',
+    'Exceeded my expectations completely.',
+    'Great ingredients and eco-friendly.',
+    'My family loves this product!',
+    'Decent product but could be better.',
+    'Not bad, worth trying once.',
+    'Average quality, nothing special.',
+    'Pretty good for the price point.',
+    'Satisfied with my purchase overall.'
+  ];
+
+  // Random author names and email patterns (realistic test data)
+  const reviewAuthors = [
+    'sarah.johnson@email.com',
+    'mike.chen@gmail.com', 
+    'emma.wilson@yahoo.com',
+    'alex.rodriguez@outlook.com',
+    'lisa.thompson@email.com',
+    'david.kumar@gmail.com',
+    'jennifer.lee@yahoo.com',
+    'robert.garcia@outlook.com',
+    'maria.gonzalez@email.com',
+    'james.brown@gmail.com',
+    'amy.davis@yahoo.com',
+    'chris.miller@outlook.com'
+  ];
+
+  // Additional randomization elements
+  const reviewPrefixes = [
+    'Honestly,',
+    'To be honest,', 
+    'I have to say,',
+    'In my opinion,',
+    'From my experience,',
+    'After trying this,',
+    ''  // Sometimes no prefix
+  ];
+
+  const reviewSuffixes = [
+    ' Definitely recommend!',
+    ' Thanks!',
+    ' Keep it up!',
+    ' Will order again.',
+    ' Good job!',
+    ''  // Sometimes no suffix
+  ];
+
+  // Build dynamic review
+  const randomMessage = reviewMessages[Math.floor(Math.random() * reviewMessages.length)];
+  const randomAuthor = reviewAuthors[Math.floor(Math.random() * reviewAuthors.length)];
+  const randomPrefix = reviewPrefixes[Math.floor(Math.random() * reviewPrefixes.length)];
+  const randomSuffix = reviewSuffixes[Math.floor(Math.random() * reviewSuffixes.length)];
+  
+  // Create unique review with timestamp
+  const runId = Math.floor(Math.random() * 10000);
+  const uniqueMessage = `${randomPrefix} ${randomMessage}${randomSuffix} (Test run #${runId})`.trim();
+
+
   const reviewBody = JSON.stringify({
-    author: 'admin@juice-sh.op',
-    message: 'bla'
+    author: randomAuthor,
+    message: uniqueMessage
   });
 
-  const reviewRes = http.put(`${baseUrl}/rest/products/1/reviews`, reviewBody, reviewHeaders);
+const minProductId = 1;
+const maxProductId = 45;
+const randomProductId = Math.floor(Math.random() * (maxProductId - minProductId + 1)) + minProductId;
+
+  const reviewRes = http.put(`${baseUrl}/rest/products/${randomProductId}/reviews`, reviewBody, reviewHeaders);
 
   check(reviewRes, {'Review posted, status is 201': (r) => r.status === 201});
 
